@@ -118,7 +118,7 @@ int main() {
     int opcao;
     do {
         // Menu de opções
-        cout << "\n===== MENU DE CONSULTA =====\n"
+        cout << "\n----- MENU DE CONSULTA -----\n"
              << "1 - Mostrar todos os valores ordenados\n"
              << "2 - Mostrar menores k valores\n"
              << "3 - Mostrar maiores k valores\n"
@@ -206,4 +206,5 @@ int main() {
 
     return 0;
 }
+
 
