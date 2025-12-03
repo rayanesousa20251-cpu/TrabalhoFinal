@@ -4,6 +4,7 @@
 #include <random>
 #include <ctime>
 #include <iomanip>
+#include <cmath>
 using namespace std;
 
 class SortedList {
@@ -17,9 +18,17 @@ public:
     }
 
     void removeValue(double value) {
-        auto pos = lower_bound(data.begin(), data.end(), value);
-        if (pos != data.end() && *pos == value)
-            data.erase(pos);
+        const double EPS = 0.01;
+
+        for (auto it = data.begin(); it != data.end(); ++it) {
+            if (fabs(*it - value) <= EPS) {
+                data.erase(it);
+                cout << "Valor removido com sucesso!\n";
+                return;
+            }
+        }
+
+        cout << "Valor nao encontrado.\n";
     }
 
     void printSorted() const {
@@ -77,25 +86,18 @@ int main() {
     SortedList lista;
     cout << fixed << setprecision(2);
 
-    // === Gerar 100 temperaturas simuladas ===
-    mt19937 rng(time(nullptr));
-    uniform_real_distribution<double> dist(-10.0, 50.0);
-
-    for (int i = 0; i < 100; i++) {
-        double temp = dist(rng);
-        lista.insertValue(temp);
-    }
-
-    cout << "Foram geradas 100 leituras de temperatura!\n";
+    cout << "A lista inicia vazia. Insira valores manualmente.\n";
 
     int opcao;
     do {
         cout << "\n===== MENU DE CONSULTA =====\n"
-             << "1 - Mostrar todas as temperaturas ordenadas\n"
-             << "2 - Mostrar menores k temperaturas\n"
-             << "3 - Mostrar maiores k temperaturas\n"
-             << "4 - Buscar temperaturas no intervalo [x, y]\n"
+             << "1 - Mostrar todos os valores ordenados\n"
+             << "2 - Mostrar menores k valores\n"
+             << "3 - Mostrar maiores k valores\n"
+             << "4 - Buscar valores no intervalo [x, y]\n"
              << "5 - Mostrar mediana atual\n"
+             << "6 - Inserir valor manualmente\n"
+             << "7 - Remover valor manualmente\n"
              << "0 - Sair\n"
              << "Escolha uma opcao: ";
         cin >> opcao;
@@ -104,24 +106,26 @@ int main() {
 
         switch (opcao) {
             case 1:
-                cout << "\nTemperaturas ordenadas:\n";
+                cout << "\nValores ordenados:\n";
                 lista.printSorted();
                 break;
 
             case 2: {
                 int k;
-                cout << "Quantas menores temperaturas deseja ver? ";
+                cout << "Quantos valores menores deseja ver? ";
                 cin >> k;
                 lista.minValues(k);
                 break;
             }
+
             case 3: {
                 int k;
-             //   cout << "Quantas maiores temperaturas deseja ver? ";
+                cout << "Quantos valores maiores deseja ver? ";
                 cin >> k;
                 lista.maxValues(k);
                 break;
             }
+
             case 4: {
                 double x, y;
                 cout << "Digite o intervalo [x y]: ";
@@ -129,9 +133,27 @@ int main() {
                 lista.rangeQuery(x, y);
                 break;
             }
+
             case 5:
                 cout << "Mediana atual: " << lista.median() << " \n";
                 break;
+
+            case 6: {
+                double valor;
+                cout << "Digite o valor a inserir: ";
+                cin >> valor;
+                lista.insertValue(valor);
+                cout << "Valor inserido!\n";
+                break;
+            }
+
+            case 7: {
+                double valor;
+                cout << "Digite o valor a remover: ";
+                cin >> valor;
+                lista.removeValue(valor);
+                break;
+            }
 
             case 0:
                 cout << "Encerrando...\n";
