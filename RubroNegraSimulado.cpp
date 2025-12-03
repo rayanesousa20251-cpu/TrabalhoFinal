@@ -6,10 +6,9 @@
 #include <iomanip>
 using namespace std;
 
-//gera um no para a arvore
 enum Color { RED, BLACK };
 
-struct Node {
+struct Node { //gera um no para a arvore
     float value;
     Color color;
     Node *left, *right, *parent;
@@ -17,7 +16,7 @@ struct Node {
     Node(float v) : value(v), color(RED), left(nullptr), right(nullptr), parent(nullptr) {}
 };
 
-// gera a arvore
+
 private:
     Node* root;
 
@@ -124,35 +123,35 @@ public:
         return arr;
     }
 
-    void printSorted() {
+    void printSorted() { //temperaturas ordenadas
         auto arr = getSorted();
         cout << "\nTemperaturas ordenadas:\n";
         for (float v : arr) cout << v << " ";
         cout << "\n";
     }
 
-    void minK(int k) {
+    void minK(int k) { //busca das menores temperaturas
         auto arr = getSorted();
         cout << k << " menores temperaturas: ";
         for (int i = 0; i < k && i < arr.size(); i++) cout << arr[i] << " ";
         cout << "\n";
     }
 
-    void maxK(int k) {
+    void maxK(int k) { //busca das maiores temperaturas
         auto arr = getSorted();
         cout << k << " maiores temperaturas: ";
         for (int i = arr.size() - k; i < arr.size() && i >= 0; i++) cout << arr[i] << " ";
         cout << "\n";
     }
 
-    void rangeQuery(float a, float b) {
+    void rangeQuery(float a, float b) { //intervalo de busca do usuario
         auto arr = getSorted();
         cout << "Temperaturas no intervalo [" << a << ", " << b << "]: ";
         for (float v : arr) if (v >= a && v <= b) cout << v << " ";
         cout << "\n";
     }
 
-    void median() {
+    void median() { //calculo da mediana 
         auto arr = getSorted();
         if (arr.empty()) { cout << "Sem dados.\n"; return; }
         if (arr.size() % 2 == 1)
@@ -224,5 +223,6 @@ int main() { //main
 
     return 0; 
 }
+
 
 
