@@ -121,7 +121,7 @@ int main() {
 
     int opcao;
     do {
-        cout << "\n===== MENU DE CONSULTA =====\n"
+        cout << "\n----- MENU DE CONSULTA -----\n"
              << "1 - Mostrar todas as temperaturas ordenadas\n"
              << "2 - Mostrar n menores temperaturas\n"
              << "3 - Mostrar n maiores temperaturas\n"
@@ -199,9 +199,10 @@ int main() {
                 cout << "Opcao invalida!\n";
         }
 
-    } while (opcao != 0);
+    } while (opcao != 0); //ate o usuario digitar 0 para sair do menu
 
     return 0;
 }
+
 
 
