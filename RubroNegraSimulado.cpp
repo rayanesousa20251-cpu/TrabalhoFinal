@@ -6,7 +6,7 @@
 #include <iomanip>
 using namespace std;
 
-// ==================== NÓ DA ÁRVORE ====================
+//gera um no para a arvore
 enum Color { RED, BLACK };
 
 struct Node {
@@ -17,12 +17,11 @@ struct Node {
     Node(float v) : value(v), color(RED), left(nullptr), right(nullptr), parent(nullptr) {}
 };
 
-// ==================== ÁRVORE RUBRO-NEGRA ====================
-class RedBlackTree {
+// gera a arvore
 private:
     Node* root;
 
-    void rotateLeft(Node* x) {
+    void rotateLeft(Node* x) { //rotação da arvore para a esquerda
         Node* y = x->right;
         x->right = y->left;
         if (y->left != nullptr) y->left->parent = x;
@@ -34,7 +33,7 @@ private:
         x->parent = y;
     }
 
-    void rotateRight(Node* y) {
+    void rotateRight(Node* y) { //rotação da arvore para a direita
         Node* x = y->left;
         y->left = x->right;
         if (x->right != nullptr) x->right->parent = y;
@@ -163,31 +162,31 @@ public:
     }
 };
 
-// ==================== MAIN ====================
-int main() {
+
+int main() { //main
     RedBlackTree tree;
     srand(time(nullptr));
     cout << fixed << setprecision(2);
 
     cout << "Simulando 100 leituras de temperatura...\n";
     for (int i = 0; i < 100; i++) {
-        float temp = (rand() % 600) / 10.0; // 0.0 a 60.0 ºC
+        float temp = (rand() % 600) / 10.0; // temperaturas de 0.0 a 60.0 ºC
         tree.insert(temp);
     }
 
     int op;
-    do {
-        cout << "\n===== MENU DE CONSULTA  =====\n"
+    do { //menu no terminal para interação com o programa
+        cout << "\n----- MENU DE CONSULTA  -----\n"
              << "1 - Mostrar todas as temperaturas ordenadas\n"
-             << "2 - Mostrar menores k temperaturas\n"
-             << "3 - Mostrar maiores k temperaturas\n"
+             << "2 - Mostrar n menores temperaturas\n"
+             << "3 - Mostrar n maiores temperaturas\n"
              << "4 - Buscar temperaturas no intervalo [x, y]\n"
              << "5 - Mostrar mediana\n"
              << "0 - Sair\n"
              << "Escolha uma opcao: ";
         cin >> op;
 
-        switch (op) {
+        switch (op) { //opcoes para o usuario selecionar
             case 1:
                 tree.printSorted();
                 break;
@@ -221,8 +220,9 @@ int main() {
             default:
                 cout << "Opcao invalida!\n";
         }
-    } while (op != 0);
+    } while (op != 0); //ate o usuario digitar 0 para sair do loop
 
-    return 0;
+    return 0; 
 }
+
 
