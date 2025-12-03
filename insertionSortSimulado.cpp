@@ -1,82 +1,64 @@
-#include <iostream>     // Entrada e saída padrão
-#include <vector>       // Vetor dinâmico para armazenar os valores
-#include <algorithm>    // lower_bound (busca binária)
-#include <random>       // Gerador de números aleatórios
-#include <ctime>        // time() para seed do RNG
-#include <iomanip>      // Formatação de casas decimais
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <random>
+#include <ctime>
+#include <iomanip>
 using namespace std;
 
-// =====================================================================
-// Classe SortedList — mantém todos os valores sempre ordenados
-// =====================================================================
 class SortedList {
 private:
-    vector<double> data;  // Armazena os valores em ordem crescente
+    vector<double> data;  // Armazena os valores ordenados
 
 public:
 
-    // --------------------------------------------------------
-    // Insere um valor usando busca binária para manter ordem
-    // --------------------------------------------------------
     void insertValue(double value) {
-        // lower_bound retorna a primeira posição onde 'value'
-        // pode ser inserido mantendo o vetor ordenado
+        // Encontra a posição correta para manter a ordem
         auto pos = lower_bound(data.begin(), data.end(), value);
         data.insert(pos, value);
     }
 
-    // --------------------------------------------------------
-    // Remove um valor considerando tolerância para números reais
-    // --------------------------------------------------------
     void removeValue(double value) {
-        const double EPS = 0.01; // tolerância de 0.01 para comparação
+        // Tolerância para comparar valores decimais
+        const double EPS = 0.01;
 
-        // Percorre procurando um valor "aproximadamente igual"
+        // Procura por um valor aproximado ao informado
         for (auto it = data.begin(); it != data.end(); ++it) {
-            if (fabs(*it - value) <= EPS) {  // diferença menor que EPS?
-                data.erase(it);              // remove o elemento
+            if (fabs(*it - value) <= EPS) {
+                data.erase(it);  // Remove o valor
                 cout << "Valor removido com sucesso!\n";
                 return;
             }
         }
 
-        // Se nenhum valor foi encontrado dentro da tolerância
         cout << "Valor nao encontrado (diferenca muito grande).\n";
     }
 
-    // --------------------------------------------------------
-    // Exibe todos os valores ordenados
-    // --------------------------------------------------------
     void printSorted() const {
+        // Verifica se a lista está vazia
         if (data.empty()) {
             cout << "Lista vazia.\n";
             return;
         }
 
+        // Imprime todos os valores
         for (double v : data) cout << v << " ";
         cout << "\n";
     }
 
-    // --------------------------------------------------------
-    // Exibe as k menores temperaturas
-    // --------------------------------------------------------
     void minValues(int k) const {
         if (data.empty()) {
             cout << "Lista vazia.\n";
             return;
         }
 
-        // Garante que k não ultrapasse o tamanho da lista
+        // Impede que k seja maior que o tamanho
         k = min(k, (int)data.size());
 
-        for (int i = 0; i < k; i++)
-            cout << data[i] << " ";
+        for (int i = 0; i < k; i++) cout << data[i] << " ";
         cout << "\n";
     }
 
-    // --------------------------------------------------------
-    // Exibe as k maiores temperaturas
-    // --------------------------------------------------------
     void maxValues(int k) const {
         if (data.empty()) {
             cout << "Lista vazia.\n";
@@ -85,25 +67,22 @@ public:
 
         k = min(k, (int)data.size());
 
-        // Começa do fim e exibe k elementos
+        // Imprime os últimos k valores
         for (int i = data.size() - k; i < (int)data.size(); i++)
             cout << data[i] << " ";
         cout << "\n";
     }
 
-    // --------------------------------------------------------
-    // Busca valores dentro do intervalo [x, y]
-    // --------------------------------------------------------
     void rangeQuery(double x, double y) const {
         if (data.empty()) {
             cout << "Lista vazia.\n";
             return;
         }
 
-        // lower_bound encontra o primeiro valor >= x
+        // Encontra o primeiro valor >= x
         auto it = lower_bound(data.begin(), data.end(), x);
 
-        // percorre até ultrapassar o limite y
+        // Imprime valores até ultrapassar y
         while (it != data.end() && *it <= y) {
             cout << *it << " ";
             it++;
@@ -111,37 +90,28 @@ public:
         cout << "\n";
     }
 
-    // --------------------------------------------------------
-    // Calcula a mediana dos valores
-    // --------------------------------------------------------
     double median() const {
-        if (data.empty()) return 0; // evita erro se lista estiver vazia
+        if (data.empty()) return 0;
 
         int n = data.size();
 
-        // Caso ímpar: valor do meio
-        if (n % 2 == 1)
-            return data[n/2];
+        // Caso ímpar
+        if (n % 2 == 1) return data[n/2];
 
-        // Caso par: média dos dois do meio
+        // Caso par
         return (data[n/2 - 1] + data[n/2]) / 2.0;
     }
 };
 
-// =====================================================================
-// Função principal
-// =====================================================================
 int main() {
-    SortedList lista;                       // objeto da lista ordenada
-    cout << fixed << setprecision(2);       // imprime sempre 2 casas decimais
+    SortedList lista;
+    cout << fixed << setprecision(2);  // Define 2 casas decimais
 
-    // -----------------------------------------------------------------
-    // Gerando 100 temperaturas aleatórias entre -10 e 50 graus
-    // -----------------------------------------------------------------
-    mt19937 rng(time(nullptr));             // inicializa RNG com seed atual
+    // Gerador de números aleatórios
+    mt19937 rng(time(nullptr));
     uniform_real_distribution<double> dist(-10.0, 50.0);
 
-    // Insere 100 valores simulados na lista
+    // Gera 100 temperaturas
     for (int i = 0; i < 100; i++) {
         double temp = dist(rng);
         lista.insertValue(temp);
@@ -151,7 +121,6 @@ int main() {
 
     int opcao;
     do {
-        // ------------------- MENU ----------------------
         cout << "\n===== MENU DE CONSULTA =====\n"
              << "1 - Mostrar todas as temperaturas ordenadas\n"
              << "2 - Mostrar n menores temperaturas\n"
@@ -162,19 +131,16 @@ int main() {
              << "7 - Remover valor manualmente\n"
              << "0 - Sair\n"
              << "Escolha uma opcao: ";
-
         cin >> opcao;
 
-        // Se o usuário digitar algo inválido
+        // Limpa entrada inválida
         if (!cin) {
-            cin.clear();           // limpa o erro
-            cin.ignore(999, '\n'); // descarta entrada inválida
+            cin.clear();
+            cin.ignore(999, '\n');
             continue;
         }
 
-        // ------------------- TRATAMENTO DAS OPÇÕES ----------------------
         switch (opcao) {
-
             case 1:
                 cout << "\nTemperaturas ordenadas:\n";
                 lista.printSorted();
@@ -233,8 +199,9 @@ int main() {
                 cout << "Opcao invalida!\n";
         }
 
-    } while (opcao != 0); // Repete até o usuário escolher sair
+    } while (opcao != 0);
 
     return 0;
 }
+
 
