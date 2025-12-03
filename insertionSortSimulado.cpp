@@ -102,8 +102,8 @@ int main() {
     do {
         cout << "\n===== MENU DE CONSULTA =====\n"
              << "1 - Mostrar todas as temperaturas ordenadas\n"
-             << "2 - Mostrar menores k temperaturas\n"
-             << "3 - Mostrar maiores k temperaturas\n"
+             << "2 - Mostrar n menores temperaturas\n"
+             << "3 - Mostrar n maiores temperaturas\n"
              << "4 - Buscar temperaturas no intervalo [x, y]\n"
              << "5 - Mostrar mediana atual\n"
              << "6 - Inserir valor manualmente\n"
@@ -122,14 +122,14 @@ int main() {
 
             case 2: {
                 int k;
-                cout << "Quantas menores temperaturas deseja ver? ";
+                cout << "Quantas temperaturas menores deseja ver? ";
                 cin >> k;
                 lista.minValues(k);
                 break;
             }
             case 3: {
                 int k;
-                cout << "Quantas maiores temperaturas deseja ver? ";
+                cout << "Quantas temperaturas maiores deseja ver? ";
                 cin >> k;
                 lista.maxValues(k);
                 break;
@@ -147,7 +147,7 @@ int main() {
 
             case 6: {
                 double valor;
-                cout << "Digite o valor a inserir: ";
+                cout << "Digite o valor para inserir: ";
                 cin >> valor;
                 lista.insertValue(valor);
                 cout << "Valor inserido!\n";
@@ -156,7 +156,7 @@ int main() {
 
             case 7: {
                 double valor;
-                cout << "Digite o valor a remover: ";
+                cout << "Digite o valor para remover: ";
                 cin >> valor;
                 lista.removeValue(valor);
                 break;
@@ -174,3 +174,4 @@ int main() {
 
     return 0;
 }
+
