@@ -4,36 +4,43 @@
 #include <iomanip>
 using namespace std;
 
+// Cores usadas pela Árvore Rubro-Negra
 enum Color { RED, BLACK };
 
-// =====================
-// Estrutura do nó
-// =====================
+
+// Estrutura de cada nó da árvore
 struct Node {
-    float value;
-    Color color;
-    Node *left, *right, *parent;
+    float value;        // valor da temperatura
+    Color color;        // cor do nó (vermelho ou preto)
+    Node *left;         // filho esquerdo
+    Node *right;        // filho direito
+    Node *parent;       // pai do nó
 
     Node(float v) : value(v), color(RED), left(nullptr), right(nullptr), parent(nullptr) {}
 };
 
-// =====================
-// Árvore Rubro-Negra
-// =====================
+
+// Classe da Árvore Rubro-Negra
 class RedBlackTree {
 private:
-    Node* root;
+    Node* root;     // raiz da árvore
 
-    // Rotação à esquerda
+    // Rotação à esquerda (reorganiza a árvore)
     void rotateLeft(Node* x) {
         Node* y = x->right;
+
         x->right = y->left;
-        if (y->left != nullptr) y->left->parent = x;
+        if (y->left != nullptr) 
+            y->left->parent = x;
+
         y->parent = x->parent;
 
-        if (x->parent == nullptr) root = y;
-        else if (x == x->parent->left) x->parent->left = y;
-        else x->parent->right = y;
+        if (x->parent == nullptr) 
+            root = y;
+        else if (x == x->parent->left) 
+            x->parent->left = y;
+        else 
+            x->parent->right = y;
 
         y->left = x;
         x->parent = y;
@@ -42,47 +49,55 @@ private:
     // Rotação à direita
     void rotateRight(Node* y) {
         Node* x = y->left;
+
         y->left = x->right;
-        if (x->right != nullptr) x->right->parent = y;
+        if (x->right != nullptr) 
+            x->right->parent = y;
+
         x->parent = y->parent;
 
-        if (y->parent == nullptr) root = x;
-        else if (y == y->parent->right) y->parent->right = x;
-        else y->parent->left = x;
+        if (y->parent == nullptr) 
+            root = x;
+        else if (y == y->parent->right) 
+            y->parent->right = x;
+        else 
+            y->parent->left = x;
 
         x->right = y;
         y->parent = x;
     }
 
-    // Correção após inserção
+    // Ajusta as cores e rotações após a inserção
     void fixInsert(Node* pt) {
         Node *parent, *grandparent;
 
+        // Enquanto o nó e seu pai forem vermelhos, precisa corrigir
         while (pt != root && pt->color == RED && pt->parent->color == RED) {
             parent = pt->parent;
             grandparent = parent->parent;
 
-            // Pai é filho esquerdo do avô
+            // Pai está à esquerda do avô
             if (parent == grandparent->left) {
                 Node* uncle = grandparent->right;
 
+                // Caso 1: tio vermelho → recolorir
                 if (uncle && uncle->color == RED) {
                     parent->color = BLACK;
                     uncle->color = BLACK;
                     grandparent->color = RED;
                     pt = grandparent;
-                } else {
+                } 
+                // Caso 2/3: tio preto → rotações
+                else {
                     if (pt == parent->right) {
                         rotateLeft(parent);
                         pt = parent;
-                        parent = pt->parent;
                     }
                     rotateRight(grandparent);
                     swap(parent->color, grandparent->color);
-                    pt = parent;
                 }
             }
-            // Pai é filho direito
+            // Pai está à direita do avô
             else {
                 Node* uncle = grandparent->left;
 
@@ -102,10 +117,11 @@ private:
             }
         }
 
+        // A raiz sempre deve ser preta
         root->color = BLACK;
     }
 
-    // Caminhamento in-order
+    // Percurso in-order (gera os valores ordenados)
     void inorder(Node* node, vector<float>& arr) {
         if (!node) return;
         inorder(node->left, arr);
@@ -113,7 +129,7 @@ private:
         inorder(node->right, arr);
     }
 
-    // Remover recursivamente (usado para limpar tudo)
+    // Remove toda a árvore (usado para esvaziar)
     void deleteAll(Node* node) {
         if (!node) return;
         deleteAll(node->left);
@@ -125,33 +141,39 @@ public:
 
     RedBlackTree() : root(nullptr) {}
 
-    // Inserção normal
+    // Inserir um valor na árvore
     void insert(float value) {
         Node* pt = new Node(value);
         Node* parent = nullptr;
         Node* current = root;
 
+        // Procura onde inserir o novo valor
         while (current != nullptr) {
             parent = current;
             current = (value < current->value) ? current->left : current->right;
         }
 
+        // Conecta o novo nó ao seu pai
         pt->parent = parent;
-        if (parent == nullptr) root = pt;
-        else if (value < parent->value) parent->left = pt;
-        else parent->right = pt;
+        if (parent == nullptr) 
+            root = pt;
+        else if (value < parent->value) 
+            parent->left = pt;
+        else 
+            parent->right = pt;
 
+        // Ajusta cores e rotações
         fixInsert(pt);
     }
 
-    // Limpar árvore (esvaziar lista)
+    // Limpa toda a árvore (esvazia tudo)
     void clear() {
         deleteAll(root);
         root = nullptr;
         cout << "\n>> Todos os dados foram removidos! Arvore vazia.\n";
     }
 
-    // Vetor ordenado
+    // Retorna um vetor ordenado com todos os valores
     vector<float> getSorted() {
         vector<float> arr;
         inorder(root, arr);
@@ -159,49 +181,53 @@ public:
         return arr;
     }
 
-    // Imprimir temperaturas ordenadas
+    // Mostra as temperaturas em ordem crescente
     void printSorted() {
         auto arr = getSorted();
+
         if (arr.empty()) {
             cout << "\nNenhuma temperatura cadastrada.\n";
             return;
         }
+
         cout << "\nTemperaturas ordenadas:\n";
         for (float v : arr) cout << v << " ";
         cout << "\n";
     }
 
-    // n menores
+    // n menores temperaturas
     void minK(int k) {
         auto arr = getSorted();
-        if (arr.empty()) {
-            cout << "\nSem dados.\n"; return;
-        }
+        if (arr.empty()) { cout << "\nSem dados.\n"; return; }
+
         cout << k << " menores temperaturas: ";
-        for (int i = 0; i < k && i < arr.size(); i++) cout << arr[i] << " ";
+        for (int i = 0; i < k && i < arr.size(); i++)
+            cout << arr[i] << " ";
         cout << "\n";
     }
 
-    // n maiores
+    // n maiores temperaturas
     void maxK(int k) {
         auto arr = getSorted();
-        if (arr.empty()) {
-            cout << "\nSem dados.\n"; return;
-        }
+        if (arr.empty()) { cout << "\nSem dados.\n"; return; }
+
         cout << k << " maiores temperaturas: ";
-        for (int i = arr.size() - k; i < arr.size() && i >= 0; i++) cout << arr[i] << " ";
+        for (int i = arr.size() - k; i < arr.size() && i >= 0; i++)
+            cout << arr[i] << " ";
         cout << "\n";
     }
 
-    // Intervalo [a, b]
+    // Buscar valores dentro do intervalo [a, b]
     void rangeQuery(float a, float b) {
         auto arr = getSorted();
         cout << "Temperaturas no intervalo [" << a << ", " << b << "]: ";
-        for (float v : arr) if (v >= a && v <= b) cout << v << " ";
+        for (float v : arr)
+            if (v >= a && v <= b)
+                cout << v << " ";
         cout << "\n";
     }
 
-    // Mediana
+    // Calcular mediana
     void median() {
         auto arr = getSorted();
         if (arr.empty()) { cout << "Sem dados.\n"; return; }
@@ -216,15 +242,16 @@ public:
 };
 
 
-// =====================
-// Programa principal
-// =====================
+//Main
+
+
 int main() {
     RedBlackTree tree;
-    cout << fixed << setprecision(2);
+    cout << fixed << setprecision(2); // mostrar números com 2 casas decimais
 
     int op;
     do {
+        // Menu para escolher ações
         cout << "\n----- MENU -----\n"
              << "1 - Inserir temperatura\n"
              << "2 - Mostrar todas ordenadas\n"
@@ -238,6 +265,7 @@ int main() {
         cin >> op;
 
         switch (op) {
+
         case 1: {
             float t;
             cout << "Digite a temperatura: ";
@@ -245,9 +273,11 @@ int main() {
             tree.insert(t);
             break;
         }
+
         case 2:
             tree.printSorted();
             break;
+
         case 3: {
             int n;
             cout << "n = ";
@@ -255,6 +285,7 @@ int main() {
             tree.minK(n);
             break;
         }
+
         case 4: {
             int n;
             cout << "n = ";
@@ -262,6 +293,7 @@ int main() {
             tree.maxK(n);
             break;
         }
+
         case 5: {
             float x, y;
             cout << "Digite x e y: ";
@@ -269,15 +301,19 @@ int main() {
             tree.rangeQuery(x, y);
             break;
         }
+
         case 6:
             tree.median();
             break;
+
         case 7:
             tree.clear();
             break;
+
         case 0:
             cout << "Encerrando...\n";
             break;
+
         default:
             cout << "Opcao invalida!\n";
         }
@@ -286,3 +322,5 @@ int main() {
 
     return 0;
 }
+
+
