@@ -13,11 +13,13 @@ private:
 
 public:
     void insertValue(double value) {
+        // Insere mantendo a ordem
         auto pos = lower_bound(data.begin(), data.end(), value);
         data.insert(pos, value);
     }
 
     void removeValue(double value) {
+        // Permite remover valores aproximados
         const double EPS = 0.01;
 
         for (auto it = data.begin(); it != data.end(); ++it) {
@@ -32,6 +34,7 @@ public:
     }
 
     void printSorted() const {
+        // Mostra todos os valores
         if (data.empty()) {
             cout << "Lista vazia.\n";
             return;
@@ -41,6 +44,7 @@ public:
     }
 
     void minValues(int k) const {
+        // Mostra os menores k valores
         if (data.empty()) {
             cout << "Lista vazia.\n";
             return;
@@ -51,6 +55,7 @@ public:
     }
 
     void maxValues(int k) const {
+        // Mostra os maiores k valores
         if (data.empty()) {
             cout << "Lista vazia.\n";
             return;
@@ -62,6 +67,7 @@ public:
     }
 
     void rangeQuery(double x, double y) const {
+        // Busca valores no intervalo [x, y]
         if (data.empty()) {
             cout << "Lista vazia.\n";
             return;
@@ -75,6 +81,7 @@ public:
     }
 
     double median() const {
+        // Calcula a mediana
         if (data.empty()) return 0;
         int n = data.size();
         if (n % 2 == 1) return data[n/2];
@@ -90,7 +97,8 @@ int main() {
 
     int opcao;
     do {
-        cout << "\n===== MENU DE CONSULTA =====\n"
+        // Menu principal
+        cout << "\n MENU DE CONSULTA \n"
              << "1 - Mostrar todos os valores ordenados\n"
              << "2 - Mostrar menores k valores\n"
              << "3 - Mostrar maiores k valores\n"
@@ -106,11 +114,13 @@ int main() {
 
         switch (opcao) {
             case 1:
+                // Mostrar todos os valores
                 cout << "\nValores ordenados:\n";
                 lista.printSorted();
                 break;
 
             case 2: {
+                // Menores k valores
                 int k;
                 cout << "Quantos valores menores deseja ver? ";
                 cin >> k;
@@ -119,6 +129,7 @@ int main() {
             }
 
             case 3: {
+                // Maiores k valores
                 int k;
                 cout << "Quantos valores maiores deseja ver? ";
                 cin >> k;
@@ -127,6 +138,7 @@ int main() {
             }
 
             case 4: {
+                // Intervalo [x, y]
                 double x, y;
                 cout << "Digite o intervalo [x y]: ";
                 cin >> x >> y;
@@ -135,10 +147,12 @@ int main() {
             }
 
             case 5:
+                // Mediana
                 cout << "Mediana atual: " << lista.median() << " \n";
                 break;
 
             case 6: {
+                // Inserir valor
                 double valor;
                 cout << "Digite o valor a inserir: ";
                 cin >> valor;
@@ -148,6 +162,7 @@ int main() {
             }
 
             case 7: {
+                // Remover valor
                 double valor;
                 cout << "Digite o valor a remover: ";
                 cin >> valor;
@@ -156,6 +171,7 @@ int main() {
             }
 
             case 0:
+                // Sair
                 cout << "Encerrando...\n";
                 break;
 
