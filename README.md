@@ -4,8 +4,6 @@ Este repositório contém o código e o relatório final do projeto de **Estrutu
 
 O projeto compara o desempenho de duas estruturas de dados — **Lista Ordenada** e **Árvore Rubro-Negra** — no armazenamento e processamento de leituras reais e simuladas do sensor **DHT22**, em um cenário que simula o monitoramento em tempo real em ambientes industriais.
 
----
-
 ## 1. Resumo e Motivação
 
 Sistemas de monitoramento industrial exigem o registro e a consulta rápida de dados de sensores. Estruturas simples, como a **Lista Ordenada**, sofrem com a degradação de desempenho em grandes volumes de leituras (custo `O(n)`), limitando sua escalabilidade.
@@ -16,8 +14,6 @@ Sistemas de monitoramento industrial exigem o registro e a consulta rápida de d
 - **Versão Aprimorada: Árvore Rubro-Negra:** Estrutura auto-balanceada que garante operações em tempo logarítmico (`O(log n)`), ideal para sistemas em tempo real e escaláveis.
 
 **Objetivo:** Avaliar o custo-benefício entre simplicidade e eficiência para o processamento contínuo de dados de temperatura e umidade.
-
----
 
 ## 2. Descrição do Problema e da Escolha da Solução
 
@@ -33,8 +29,6 @@ O objetivo principal é armazenar leituras do sensor **DHT22** e executar opera�
 
 - Estrutura de busca balanceada que garante custo logarítmico (`O(log n)`) para inserção, remoção e busca.  
 - Ideal para processamento contínuo de dados em tempo real.  
-
----
 
 ## 3. Descrição Técnica das Estruturas de Dados
 
@@ -55,19 +49,16 @@ O objetivo principal é armazenar leituras do sensor **DHT22** e executar opera�
   - Não pode haver dois nós vermelhos consecutivos  
   - Todos os caminhos da raiz até folhas nulas contêm o mesmo número de nós pretos
 
----
-
 ## 4. Metodologia de Comparação
 
 Experimentos realizados em **Desktop (C++)** e **Arduino**, com leituras simuladas e reais do **DHT22**.
+
 | Operação              | Lista Ordenada (Pior Caso) | Árvore Rubro-Negra (Pior Caso) |
 |-----------------------|----------------------------|--------------------------------|
 | Inserção              | O(n)                       | O(log n)                       |
 | Remoção               | O(n)                       | O(log n)                       |
 | Consulta de intervalo | O(log n) + O(k)            | O(log n) + O(k)                |
 | Mediana               | O(1)                       | O(log n)                       |
-
-
 
 > k = número de elementos no intervalo de consulta
 
@@ -81,8 +72,6 @@ Experimentos realizados em **Desktop (C++)** e **Arduino**, com leituras simulad
 | 100.000 | 920               | 1.4                     |
 
 **Conclusão:** Árvore Rubro-Negra recomendada para monitoramento contínuo escalável.
-
----
 
 ## 5. Resultados Experimentais
 
@@ -108,16 +97,11 @@ Experimentos realizados em **Desktop (C++)** e **Arduino**, com leituras simulad
 
 **Análise:** Árvore Rubro-Negra significativamente mais rápida em grandes volumes de dados.
 
-## Resultados Experimentais
-
 ### Tempo de Inserção
 ![Gráfico de tempo de inserção](grafico_insercao.png)
 
 ### Tempo de Consulta (Range Query)
 ![Gráfico de Range Query](grafico_range.png)
-
-
----
 
 ## 6. Organização do Código e Funções Principais
 
@@ -133,13 +117,11 @@ Experimentos realizados em **Desktop (C++)** e **Arduino**, com leituras simulad
 ### Funções
 
 - **Lista Ordenada:** `insertValue()`, `removeValue()`, `getMedian()`, `getMin()`, `getMax()`, `queryRange()`, `print()`, `clearList()`.
-  
 - **Árvore Rubro-Negra:** `insertValue()+fixInsert()`, `removeValue()+fixDelete()`, `inorder()`, `search()`, `minimum()`, `maximum()`, `getMedian()`.
 
 ### Execução
 
 **PC (C++):**
-
 ```bash
 g++ insertionSort.cpp -o insertionSort.exe
 
