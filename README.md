@@ -52,7 +52,6 @@ O objetivo principal é armazenar leituras do sensor **DHT22** e executar opera�
 ## 4. Metodologia de Comparação
 
 Experimentos realizados em **Desktop (C++)** e **Arduino**, com leituras simuladas e reais do **DHT22**.
-
 | Operação              | Lista Ordenada (Pior Caso) | Árvore Rubro-Negra (Pior Caso) |
 |-----------------------|----------------------------|--------------------------------|
 | Inserção              | O(n)                       | O(log n)                       |
