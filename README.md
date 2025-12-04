@@ -68,6 +68,7 @@ Experimentos realizados em **Desktop (C++)** e **Arduino**, com leituras simulad
 | Range Query     | O(log n) + O(k)            | O(log n) + O(k)                |
 | Mediana         | O(1)                       | O(log n)                        |
 
+
 > k = número de elementos no intervalo de consulta
 
 **Resultados Chave:**
