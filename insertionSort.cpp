@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <random>
+#include <random> // Adicionado para geração aleatória
 #include <ctime>
 #include <iomanip>
 #include <cmath>
@@ -33,8 +33,6 @@ public:
                 return;
             }
         }
-
-        // caso nenhum valor tenha sido encontrado
         cout << "Valor nao encontrado.\n";
     }
 
@@ -113,7 +111,7 @@ int main() {
     SortedList lista; // cria a lista ordenada
     cout << fixed << setprecision(2); // formata saída para 2 casas decimais
 
-    cout << "A lista inicia vazia. Insira valores manualmente.\n";
+    cout << "A lista inicia vazia. Insira valores manualmente ou simule sensores.\n";
 
     int opcao;
     do {
@@ -127,6 +125,7 @@ int main() {
              << "6 - Inserir valor manualmente\n"
              << "7 - Remover valor manualmente\n"
              << "8 - Esvaziar lista completamente\n"
+             << "9 - Simular Dados (Gerar Aleatorio)\n"
              << "0 - Sair\n"
              << "Escolha uma opcao: ";
         cin >> opcao;
@@ -190,9 +189,25 @@ int main() {
             }
 
             case 8:
-                // chama a função que limpa toda a lista
                 lista.clearList();
                 break;
+            
+            case 9: { // NOVA OPÇÃO: GERAÇÃO ALEATÓRIA
+                int qtd;
+                cout << "Quantos valores deseja simular? ";
+                cin >> qtd;
+                
+                // Configura gerador de numeros aleatorios
+                random_device rd;
+                mt19937 gen(rd());
+                uniform_real_distribution<> dis(20.0, 45.0); // Gera entre 20 e 45 graus
+
+                for(int i = 0; i < qtd; i++){
+                    lista.insertValue(dis(gen));
+                }
+                cout << qtd << " valores simulados inseridos com sucesso!\n";
+                break;
+            }
 
             case 0:
                 cout << "Encerrando...\n";
@@ -202,9 +217,11 @@ int main() {
                 cout << "Opcao invalida!\n";
         }
 
-    } while (opcao != 0); // repete até escolher sair
+    } while (opcao != 0);
 
     return 0;
 }
+}
+
 
 
