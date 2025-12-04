@@ -42,7 +42,7 @@ public:
             cout << "Lista vazia.\n";
             return;
         }
-        for (double v : data) cout << v << " "; // percorre e imprime
+        for (double v : data) cout << v << "\n"; // percorre e imprime
         cout << "\n";
     }
 
@@ -125,7 +125,7 @@ int main() {
              << "6 - Inserir valor manualmente\n"
              << "7 - Remover valor manualmente\n"
              << "8 - Esvaziar lista completamente\n"
-             << "9 - Simular Dados (Gerar Aleatorio)\n"
+             << "9 - Simular dados (Gerar Aleatorio)\n"
              << "0 - Sair\n"
              << "Escolha uma opcao: ";
         cin >> opcao;
@@ -192,7 +192,7 @@ int main() {
                 lista.clearList();
                 break;
             
-            case 9: { // NOVA OPÇÃO: GERAÇÃO ALEATÓRIA
+            case 9: { 
                 int qtd;
                 cout << "Quantos valores deseja simular? ";
                 cin >> qtd;
@@ -200,7 +200,7 @@ int main() {
                 // Configura gerador de numeros aleatorios
                 random_device rd;
                 mt19937 gen(rd());
-                uniform_real_distribution<> dis(20.0, 45.0); // Gera entre 20 e 45 graus
+                uniform_real_distribution<> dis(0.0, 60.0); // Gera valores entre 0 e 60 graus
 
                 for(int i = 0; i < qtd; i++){
                     lista.insertValue(dis(gen));
@@ -220,7 +220,6 @@ int main() {
     } while (opcao != 0);
 
     return 0;
-}
 }
 
 
