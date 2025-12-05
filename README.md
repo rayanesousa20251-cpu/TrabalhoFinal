@@ -97,10 +97,10 @@ Experimentos realizados em **Desktop (C++)** e **Arduino**, com leituras simulad
 **Análise:** Árvore Rubro-Negra significativamente mais rápida em grandes volumes de dados.
 
 ### Tempo de Inserção
-![Gráfico de tempo de inserção](grafico_insercao.png)
+![Gráfico de tempo de inserção](Gráfico_insercao.png)
 
 ### Tempo de Consulta (Range Query)
-![Gráfico de Range Query](grafico_range.png)
+![Gráfico de Range Query](Gráfico_range.png)
 
 ## 6. Organização do Código e Funções Principais
 
