@@ -1,35 +1,37 @@
 #include "DHT.h"
 
+// Define o pino e o tipo do sensor DHT22
 #define DHTPIN 4
 #define DHTTYPE DHT22
 DHT dht(DHTPIN, DHTTYPE);
 
-float lista[200];       // até 200 leituras
-int tamanho = 0;
+float lista[200];       // Vetor que armazena até 200 leituras
+int tamanho = 0;        // Quantidade atual de valores armazenados
 
-// --------------------------------
-// INSERIR NA LISTA ORDENADA
-// --------------------------------
+// INSERIR UM VALOR MANTENDO A LISTA ORDENADA
 void insertValue(float value) {
-  if (tamanho >= 200) return;
+  if (tamanho >= 200) return;   // Evita inserção se a lista estiver cheia
 
   int pos = 0;
+
+  // Encontra a posição correta onde o valor deve ser inserido
   while (pos < tamanho && lista[pos] < value) pos++;
 
+  // Desloca os elementos para abrir espaço no vetor
   for (int i = tamanho; i > pos; i--) {
     lista[i] = lista[i - 1];
   }
 
+  // Insere o novo valor
   lista[pos] = value;
   tamanho++;
 }
 
-// --------------------------------
-// REMOVER UM VALOR
-// --------------------------------
+// REMOVER UM VALOR ESPECÍFICO DA LISTA
 void removeValue(float value) {
   int pos = -1;
 
+  // Procura o valor na lista
   for (int i = 0; i < tamanho; i++) {
     if (lista[i] == value) {
       pos = i;
@@ -42,6 +44,7 @@ void removeValue(float value) {
     return;
   }
 
+  // Desloca os elementos para fechar o espaço removido
   for (int i = pos; i < tamanho - 1; i++) {
     lista[i] = lista[i + 1];
   }
@@ -50,9 +53,7 @@ void removeValue(float value) {
   Serial.println("Valor removido.");
 }
 
-// --------------------------------
-// IMPRIMIR LISTA ORDENADA
-// --------------------------------
+// IMPRIMIR A LISTA TOTALMENTE ORDENADA
 void printSorted() {
   Serial.println("Lista ordenada:");
   for (int i = 0; i < tamanho; i++) {
@@ -61,9 +62,7 @@ void printSorted() {
   Serial.println("----------------------");
 }
 
-// --------------------------------
-// 3 MENORES E 3 MAIORES
-// --------------------------------
+// EXIBIR OS 3 MENORES E 3 MAIORES VALORES SALVOS
 void printMinMax() {
   Serial.println("3 menores:");
   for (int i = 0; i < 3 && i < tamanho; i++) {
@@ -76,9 +75,7 @@ void printMinMax() {
   }
 }
 
-// --------------------------------
-// RANGE QUERY
-// --------------------------------
+// LISTAR VALORES ENTRE X E Y
 void rangeQuery(float x, float y) {
   Serial.print("Valores entre ");
   Serial.print(x);
@@ -92,22 +89,20 @@ void rangeQuery(float x, float y) {
   }
 }
 
-// --------------------------------
-// MEDIANA
-// --------------------------------
+// CALCULAR A MEDIANA DA LISTA
 float median() {
-  if (tamanho == 0) return NAN;
+  if (tamanho == 0) return NAN;   // Lista vazia não tem mediana
 
+  // Se a quantidade for ímpar, retorna o elemento do meio
   if (tamanho % 2 == 1) {
     return lista[tamanho / 2];
-  } else {
-    return (lista[tamanho/2 - 1] + lista[tamanho/2]) / 2.0;
-  }
+  } 
+  
+  // Se for par, retorna a média dos dois elementos centrais
+  return (lista[tamanho/2 - 1] + lista[tamanho/2]) / 2.0;
 }
 
-// --------------------------------
-// MENU EXPLICATIVO
-// --------------------------------
+// MOSTRAR MENU DE COMANDOS DISPONÍVEIS
 void mostrarMenu() {
   Serial.println();
   Serial.println("======== MENU DE COMANDOS ========");
@@ -121,9 +116,7 @@ void mostrarMenu() {
   Serial.println();
 }
 
-// --------------------------------
-// PROCESSAR COMANDOS DIGITADOS
-// --------------------------------
+// INTERPRETAR E EXECUTAR COMANDOS DIGITADOS NO SERIAL MONITOR
 void processCommand(String cmd) {
   cmd.trim();
 
@@ -149,7 +142,7 @@ void processCommand(String cmd) {
   }
 
   if (cmd.startsWith("remove ")) {
-    float v = cmd.substring(7).toFloat();
+    float v = cmd.substring(7).toFloat();   // Extrai o número após "remove "
     removeValue(v);
     return;
   }
@@ -168,9 +161,7 @@ void processCommand(String cmd) {
   Serial.println("Comando inválido. Digite 'menu' para ajuda.");
 }
 
-// --------------------------------
-// SETUP
-// --------------------------------
+// CONFIGURAÇÃO INICIAL DO SISTEMA
 void setup() {
   Serial.begin(9600);
   dht.begin();
@@ -181,16 +172,15 @@ void setup() {
 
 unsigned long lastRead = 0;
 
-// --------------------------------
-// LOOP PRINCIPAL
-// --------------------------------
+// LOOP PRINCIPAL: LER SENSOR E TRATAR COMANDOS
 void loop() {
-  // Leitura a cada 2s
+
+  // Lê a temperatura a cada 2 segundos
   if (millis() - lastRead >= 2000) {
     float t = dht.readTemperature();
 
     if (!isnan(t)) {
-      insertValue(t);
+      insertValue(t);   // Salva a leitura na lista ordenada
       Serial.print("Temperatura lida: ");
       Serial.println(t);
     } else {
@@ -200,10 +190,9 @@ void loop() {
     lastRead = millis();
   }
 
-  // Comandos via Serial
+  // Processa comandos digitados no Serial Monitor
   if (Serial.available()) {
     String cmd = Serial.readStringUntil('\n');
     processCommand(cmd);
   }
 }
-
